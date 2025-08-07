@@ -7,6 +7,7 @@ import '../../../ai_fitbot/presentation/pages/ai_fitbot_page.dart';
 import '../../../workouts/presentation/pages/workouts_page.dart';
 import '../../../nutrition/presentation/pages/nutrition_page.dart';
 import '../../../analytics/presentation/pages/analytics_page.dart';
+import '../../../auth/presentation/pages/login_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -234,16 +235,26 @@ class HomeContent extends StatelessWidget {
                     ],
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: AppColors.textWhite.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Icon(
-                    Icons.notifications_outlined,
-                    color: AppColors.textWhite,
-                    size: 24,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginPage(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColors.textWhite.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      Icons.person_outline,
+                      color: AppColors.textWhite,
+                      size: 24,
+                    ),
                   ),
                 ),
               ],
