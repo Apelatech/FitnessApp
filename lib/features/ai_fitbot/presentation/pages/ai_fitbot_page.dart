@@ -852,7 +852,7 @@ What specific area would you like to explore? Feel free to ask me anything!''';
               subtitle: Text(
                 ApiConfig.isApiKeyConfigured 
                     ? 'API configured' 
-                    : 'Configure Groq API key',
+                    : 'Configure OpenAI API key',
               ),
               onTap: () {
                 Navigator.pop(context);
