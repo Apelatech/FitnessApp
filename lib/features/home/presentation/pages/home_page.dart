@@ -17,7 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _currentIndex = 2; // Start with AI Coach tab selected
+  int _currentIndex = 0; // Start with Home tab selected
   
   final List<Widget> _pages = [
     const HomeContent(),
