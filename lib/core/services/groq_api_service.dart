@@ -82,26 +82,30 @@ class GroqApiService {
   }
 
   String _getSystemPrompt() {
-    return '''You are AI FitBot, a professional fitness coach and nutritionist for ApelaTech Fitness app. You provide expert advice on:
+    return '''You are AI FitBot, an intelligent assistant for ApelaTech Fitness app. You are knowledgeable, helpful, and can answer a wide variety of questions.
 
-🏋️ WORKOUTS: Create personalized exercise plans, explain proper form, suggest modifications
-🍎 NUTRITION: Meal planning, macro calculations, healthy eating habits
-📊 PROGRESS: Goal setting, tracking methods, motivation
-💪 GENERAL FITNESS: Recovery, sleep, hydration, injury prevention
+PRIMARY EXPERTISE:
+🏋️ FITNESS: Workouts, exercise form, training plans, strength building
+🍎 NUTRITION: Meal planning, calories, macros, healthy eating
+📊 WELLNESS: Sleep, recovery, stress management, mental health
+💪 GOALS: Weight loss, muscle gain, endurance, general health
+
+GENERAL KNOWLEDGE:
+You can also help with general questions about health, science, technology, and lifestyle topics related to overall well-being.
 
 GUIDELINES:
-- Keep responses conversational and encouraging
+- Answer any question the user asks, whether fitness-related or general
+- Keep responses helpful, accurate, and conversational
 - Use emojis sparingly but effectively
-- Provide actionable, specific advice
-- Ask follow-up questions to personalize recommendations
-- Mention safety and proper form when discussing exercises
-- Be supportive and motivational
-- Keep responses concise but informative (max 200 words)
-- Format lists with bullet points when helpful
+- Provide actionable advice when possible
+- Be encouraging and supportive
+- Keep responses concise but informative (max 250 words)
+- If you don't know something, be honest about it
+- Format information clearly with bullet points when helpful
 
-TONE: Friendly, professional, motivating, knowledgeable
+TONE: Friendly, knowledgeable, helpful, encouraging
 
-Remember: You're helping users achieve their fitness goals through the ApelaTech Fitness platform.''';
+You're an intelligent AI assistant that happens to specialize in fitness, but you can help with any question!''';
   }
 
   String _getFallbackResponse(String userMessage) {
@@ -109,52 +113,177 @@ Remember: You're helping users achieve their fitness goals through the ApelaTech
     
     // Special network test response
     if (lowerMessage.contains('test') || lowerMessage.contains('hello') || lowerMessage.contains('hi')) {
-      return '''🤖 **AI Coach Connection Status**
+      return '''👋 **Hello! I'm AI FitBot**
 
-⚠️ Network Issue Detected: Unable to reach Groq API servers.
+I'm your intelligent fitness assistant, ready to help with:
+🏋️ **Fitness & Workouts** - Exercise plans, form tips, training advice
+🍎 **Nutrition & Diet** - Meal planning, healthy eating, macro guidance  
+💪 **Health & Wellness** - General health questions, lifestyle tips
+🧠 **General Questions** - I can help with various topics beyond fitness too!
 
-**Possible Solutions:**
-1. Check your internet connection
-2. Try restarting the app
-3. Ensure emulator has network access
+⚠️ *Currently using offline mode. For full AI capabilities, please configure your Groq API key.*
 
-**For now, I'm using offline responses.** Once connected, you'll get real AI-powered fitness coaching! 
-
-How can I help with your fitness goals today?''';
+What would you like to know about?''';
     }
     
-    if (lowerMessage.contains('workout') || lowerMessage.contains('exercise')) {
-      return '''💪 **Offline Workout Recommendation**
+    // Fitness-related responses
+    if (lowerMessage.contains('workout') || lowerMessage.contains('exercise') || lowerMessage.contains('fitness')) {
+      return '''💪 **Workout Guidance**
 
-Here's a great starter routine:
-• Push-ups: 3 sets of 8-12 reps
-• Squats: 3 sets of 10-15 reps  
-• Plank: 3 sets of 30-60 seconds
-• Walking/jogging: 20-30 minutes
+Here's a balanced starter routine:
+• **Strength**: Push-ups, squats, lunges (3 sets of 8-12 reps)
+• **Core**: Plank, mountain climbers (3 sets of 30-60 seconds)
+• **Cardio**: Walking, jogging, or cycling (20-30 minutes)
+• **Flexibility**: Stretch for 10-15 minutes after workouts
 
-What's your current fitness level? I can customize this for you once we're connected to the AI!''';
-    } else if (lowerMessage.contains('nutrition') || lowerMessage.contains('diet')) {
-      return '''🍎 **Offline Nutrition Basics**
+**Progressive Tips:**
+- Start with bodyweight exercises
+- Increase intensity gradually
+- Rest 48 hours between strength sessions
+- Listen to your body
 
-Focus on these fundamentals:
-• Eat protein with every meal (0.8g per kg body weight)
-• Include colorful vegetables and fruits
-• Stay hydrated (8-10 glasses of water daily)
-• Choose whole grains over processed foods
+What's your current fitness level and goals?''';
+    } 
+    
+    else if (lowerMessage.contains('nutrition') || lowerMessage.contains('diet') || lowerMessage.contains('food') || lowerMessage.contains('eat')) {
+      return '''🍎 **Nutrition Fundamentals**
 
-What are your nutrition goals? Weight loss, muscle gain, or general health?''';
-    } else {
-      return '''👋 **Offline Fitness Coach**
+**Daily Essentials:**
+• **Protein**: 0.8-1g per kg body weight (chicken, fish, beans, eggs)
+• **Carbs**: Choose complex carbs (oats, quinoa, sweet potatoes)
+• **Fats**: Healthy sources (avocado, nuts, olive oil)
+• **Hydration**: 8-10 glasses of water daily
 
-I can help you with:
-🏋️ Workout plans and exercise form
-🍽️ Nutrition advice and meal planning
-📈 Progress tracking and goal setting
-💪 General fitness and wellness tips
+**Meal Timing:**
+- Eat protein with every meal
+- Include vegetables in lunch and dinner
+- Pre-workout: Light carbs + protein
+- Post-workout: Protein + carbs within 30 minutes
 
-*Note: Currently using offline responses. Real AI coaching will be available once network connection is established.*
+What are your nutrition goals? Weight management, muscle gain, or general health?''';
+    }
+    
+    else if (lowerMessage.contains('weight') || lowerMessage.contains('lose') || lowerMessage.contains('gain')) {
+      return '''⚖️ **Weight Management**
 
-What would you like to work on today?''';
+**For Weight Loss:**
+• Create a moderate calorie deficit (300-500 calories/day)
+• Combine cardio + strength training
+• Focus on whole foods, lean proteins
+• Stay consistent with meal timing
+
+**For Weight Gain:**
+• Eat in a slight calorie surplus (200-500 calories/day)
+• Prioritize strength training
+• Include healthy calorie-dense foods
+• Eat frequent, balanced meals
+
+**Universal Tips:**
+- Track your progress weekly
+- Be patient with results (2-4 weeks to see changes)
+- Focus on sustainable habits
+
+What's your current goal and timeline?''';
+    }
+    
+    else if (lowerMessage.contains('sleep') || lowerMessage.contains('tired') || lowerMessage.contains('recovery')) {
+      return '''😴 **Sleep & Recovery**
+
+**Better Sleep Tips:**
+• Aim for 7-9 hours nightly
+• Keep a consistent sleep schedule
+• Avoid screens 1 hour before bed
+• Keep room cool and dark
+
+**Recovery Essentials:**
+• Rest days between intense workouts
+• Stay hydrated throughout the day
+• Manage stress with meditation or deep breathing
+• Gentle stretching or yoga
+
+**Signs You Need More Rest:**
+- Persistent fatigue
+- Decreased workout performance
+- Mood changes or irritability
+
+How has your sleep and recovery been lately?''';
+    }
+    
+    else if (lowerMessage.contains('motivation') || lowerMessage.contains('goal') || lowerMessage.contains('help')) {
+      return '''� **Motivation & Goal Setting**
+
+**SMART Goals Framework:**
+• **Specific**: Clear, defined objectives
+• **Measurable**: Track your progress
+• **Achievable**: Realistic expectations
+• **Relevant**: Personally meaningful
+• **Time-bound**: Set deadlines
+
+**Stay Motivated:**
+- Celebrate small wins along the way
+- Find an accountability partner
+- Track progress with photos/measurements
+- Focus on how exercise makes you feel
+- Remember your "why"
+
+**Common Challenges:**
+- Start small and build habits gradually
+- Expect setbacks and learn from them
+- Adjust goals as needed
+
+What specific goal would you like to work toward?''';
+    }
+    
+    // General questions
+    else if (lowerMessage.contains('how') || lowerMessage.contains('what') || lowerMessage.contains('why') || lowerMessage.contains('when')) {
+      return '''🤔 **I'm Here to Help!**
+
+I noticed you have a question! While I'm currently in offline mode, I can still provide helpful information about:
+
+**Health & Fitness Topics:**
+• Exercise techniques and workout plans
+• Nutrition advice and meal planning
+• Wellness tips and healthy habits
+• Goal setting and motivation
+
+**General Wellness:**
+• Sleep and recovery strategies
+• Stress management techniques
+• Healthy lifestyle tips
+
+*For the most accurate and personalized answers, please configure the Groq API key to enable full AI capabilities.*
+
+Could you rephrase your question or let me know what specific area you'd like help with?''';
+    }
+    
+    else {
+      return '''🤖 **AI FitBot - Your Fitness Assistant**
+
+I'm here to help with all your health and fitness questions! I can assist with:
+
+**🏋️ FITNESS**
+- Workout routines and exercise form
+- Training programs for different goals
+- Equipment recommendations
+
+**🍽️ NUTRITION** 
+- Meal planning and healthy recipes
+- Macronutrient guidance
+- Weight management strategies
+
+**💡 WELLNESS**
+- Sleep optimization
+- Stress management
+- Healthy habit formation
+
+**❓ GENERAL QUESTIONS**
+- Health-related inquiries
+- Lifestyle advice
+- Motivation and goal setting
+
+*Note: Currently using offline responses. Configure your Groq API key for full AI-powered assistance.*
+
+What would you like to explore today?''';
     }
   }
 }

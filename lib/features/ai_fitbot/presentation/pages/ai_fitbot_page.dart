@@ -374,7 +374,7 @@ For now, I'll use simulated responses to demonstrate the interface! 🤖''',
               child: TextField(
                 controller: _messageController,
                 decoration: const InputDecoration(
-                  hintText: 'Ask me anything about fitness...',
+                  hintText: 'Ask me anything - fitness, health, or general questions...',
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(horizontal: 16),
                 ),
@@ -513,59 +513,238 @@ For now, I'll use simulated responses to demonstrate the interface! 🤖''',
   String _generateSimulatedResponse(String userMessage) {
     final lowerMessage = userMessage.toLowerCase();
     
-    if (lowerMessage.contains('workout') || lowerMessage.contains('exercise')) {
-      return '''Great question! Based on your profile, I recommend starting with:
+    // Greetings and general questions
+    if (lowerMessage.contains('hello') || lowerMessage.contains('hi') || lowerMessage.contains('hey')) {
+      return '''👋 **Hello! I'm AI FitBot**
 
-💪 **Strength Training (3x/week)**
+I'm your intelligent fitness assistant! I can help you with:
+
+🏋️ **Fitness & Exercise** - Workouts, training plans, form tips
+🍎 **Nutrition & Diet** - Meal planning, healthy eating advice
+💪 **Health & Wellness** - Sleep, recovery, stress management
+🤔 **General Questions** - I can answer various health-related topics!
+
+*Note: I'm currently in offline mode. For full AI capabilities, please configure your Groq API key.*
+
+What would you like to know about today?''';
+    }
+    
+    // Fitness and workout questions
+    else if (lowerMessage.contains('workout') || lowerMessage.contains('exercise') || lowerMessage.contains('fitness') || lowerMessage.contains('gym')) {
+      return '''💪 **Workout Guidance**
+
+Based on your question, here's a great starter routine:
+
+**🏋️ Strength Training (3x/week):**
 - Push-ups: 3 sets of 8-12 reps
 - Squats: 3 sets of 10-15 reps
 - Plank: 3 sets of 30-60 seconds
+- Lunges: 3 sets of 8-12 per leg
 
-🏃 **Cardio (2x/week)**
+**🏃 Cardio (2-3x/week):**
 - 20-30 minutes moderate intensity
-- Running, cycling, or swimming
+- Walking, jogging, cycling, or swimming
 
-Would you like me to create a detailed workout plan for this week?''';
-    } else if (lowerMessage.contains('nutrition') || lowerMessage.contains('diet') || lowerMessage.contains('meal')) {
-      return '''Excellent! Nutrition is key to your fitness success. Here's what I suggest:
+**💡 Pro Tips:**
+- Rest 48 hours between strength sessions
+- Start slow and gradually increase intensity
+- Focus on proper form over speed
 
-🍎 **Daily Targets:**
-- Calories: 2000-2200 (based on your goals)
-- Protein: 120-140g
-- Carbs: 200-250g
-- Fats: 60-80g
+Would you like me to customize this based on your fitness level?''';
+    } 
+    
+    // Nutrition questions
+    else if (lowerMessage.contains('nutrition') || lowerMessage.contains('diet') || lowerMessage.contains('meal') || lowerMessage.contains('food') || lowerMessage.contains('eat')) {
+      return '''🍎 **Nutrition Guidance**
 
-🥗 **Meal Ideas:**
-- Breakfast: Oatmeal with berries and protein powder
-- Lunch: Grilled chicken salad with quinoa
-- Dinner: Salmon with sweet potato and vegetables
+Excellent question! Here's your nutrition roadmap:
 
-Need help planning your meals for the week?''';
-    } else if (lowerMessage.contains('progress') || lowerMessage.contains('track')) {
-      return '''Tracking progress is essential! Here's what I recommend monitoring:
+**📊 Daily Targets (adjust based on your goals):**
+- Calories: 1800-2200 (varies by person)
+- Protein: 1.2-1.6g per kg body weight
+- Carbs: 3-5g per kg body weight
+- Fats: 20-35% of total calories
 
-📊 **Key Metrics:**
-- Body weight (weekly)
-- Body measurements (bi-weekly)
-- Strength gains (workout logs)
-- Energy levels (daily)
+**🥗 Meal Structure:**
+- **Breakfast:** Protein + complex carbs (oats, eggs, berries)
+- **Lunch:** Lean protein + vegetables + healthy fats
+- **Dinner:** Similar to lunch, lighter portions
+- **Snacks:** Nuts, Greek yogurt, fruits
 
-📱 **Tools:**
-- Take progress photos
-- Log workouts consistently
-- Track sleep quality
-- Monitor nutrition intake
+**💧 Hydration:** 8-10 glasses of water daily
 
-I can help you set up a tracking system. What's your primary goal?''';
-    } else {
-      return '''Thanks for your question! I'm here to help with:
+What's your primary nutrition goal? Weight loss, muscle gain, or general health?''';
+    } 
+    
+    // Weight management questions
+    else if (lowerMessage.contains('weight') || lowerMessage.contains('lose') || lowerMessage.contains('gain') || lowerMessage.contains('fat') || lowerMessage.contains('muscle')) {
+      return '''⚖️ **Weight Management**
 
-🏋️ **Workouts** - Custom plans and form guidance
-🍽️ **Nutrition** - Meal planning and macro tracking  
-📈 **Progress** - Analytics and goal setting
-💪 **Motivation** - Daily tips and encouragement
+Great question! Here's how to approach your goals:
 
-What specific area would you like to focus on today?''';
+**🔥 For Weight Loss:**
+- Create a moderate calorie deficit (300-500 cal/day)
+- Combine cardio + strength training
+- Focus on whole foods and lean proteins
+- Be patient - aim for 1-2 lbs per week
+
+**💪 For Muscle Gain:**
+- Slight calorie surplus (200-400 cal/day)
+- Prioritize strength training
+- Eat 1.6-2.2g protein per kg body weight
+- Get adequate sleep (7-9 hours)
+
+**🎯 Universal Tips:**
+- Track progress with photos and measurements
+- Stay consistent for 4-6 weeks to see results
+- Adjust based on your body's response
+
+What's your specific goal and current situation?''';
+    }
+    
+    // Health and wellness questions
+    else if (lowerMessage.contains('sleep') || lowerMessage.contains('tired') || lowerMessage.contains('stress') || lowerMessage.contains('recovery') || lowerMessage.contains('health')) {
+      return '''🌙 **Health & Wellness**
+
+Taking care of your overall health is crucial! Here's my advice:
+
+**😴 Better Sleep:**
+- Aim for 7-9 hours nightly
+- Keep a consistent sleep schedule
+- Avoid screens 1 hour before bed
+- Keep bedroom cool and dark
+
+**🧘 Stress Management:**
+- Practice deep breathing or meditation
+- Regular exercise (even 10 minutes helps!)
+- Take breaks throughout your day
+- Connect with friends and family
+
+**🔄 Recovery:**
+- Rest days between intense workouts
+- Stay hydrated throughout the day
+- Gentle stretching or yoga
+- Listen to your body's signals
+
+How has your sleep and stress levels been lately?''';
+    }
+    
+    // Motivation and goal-setting
+    else if (lowerMessage.contains('motivation') || lowerMessage.contains('goal') || lowerMessage.contains('start') || lowerMessage.contains('begin')) {
+      return '''🎯 **Motivation & Goals**
+
+I love that you're ready to take action! Here's how to set yourself up for success:
+
+**📋 SMART Goal Setting:**
+- **Specific:** Clear, defined objectives
+- **Measurable:** Track your progress
+- **Achievable:** Realistic for your lifestyle
+- **Relevant:** Personally meaningful to you
+- **Time-bound:** Set deadlines
+
+**🚀 Getting Started Tips:**
+- Start small (even 10 minutes counts!)
+- Build one habit at a time
+- Find activities you actually enjoy
+- Prepare for setbacks (they're normal!)
+
+**💪 Stay Motivated:**
+- Celebrate small wins
+- Track your progress visually
+- Find an accountability partner
+- Remember your "why"
+
+What's one small step you could take today toward your goal?''';
+    }
+    
+    // General questions and how/what/why queries
+    else if (lowerMessage.contains('how') || lowerMessage.contains('what') || lowerMessage.contains('why') || lowerMessage.contains('when') || lowerMessage.contains('should')) {
+      return '''🤔 **I'm Here to Help!**
+
+I noticed you have a question! While I'm in offline mode, I can still provide guidance on:
+
+**🏃 Fitness Topics:**
+- Exercise techniques and workout planning
+- Training frequency and intensity
+- Form tips and safety guidelines
+
+**🥗 Nutrition Topics:**
+- Meal timing and portion control
+- Macronutrient balance
+- Healthy food choices
+
+**🧠 Wellness Topics:**
+- Sleep optimization strategies
+- Stress management techniques
+- Building healthy habits
+
+**💡 General Health:**
+- Recovery and rest day planning
+- Injury prevention
+- Lifestyle modifications
+
+Could you be more specific about what you'd like to know? I'm here to help with any health and fitness questions!''';
+    }
+    
+    // Progress and tracking
+    else if (lowerMessage.contains('progress') || lowerMessage.contains('track') || lowerMessage.contains('measure') || lowerMessage.contains('result')) {
+      return '''📊 **Progress Tracking**
+
+Excellent question! Tracking progress keeps you motivated and on track:
+
+**📏 Key Metrics to Monitor:**
+- Body weight (weekly, same time of day)
+- Body measurements (waist, hips, arms - bi-weekly)
+- Progress photos (monthly, same lighting/pose)
+- Strength gains (reps, weight, duration)
+- Energy levels and mood (daily)
+
+**📱 Tracking Tools:**
+- Fitness apps or journals
+- Progress photos
+- Workout logs
+- Sleep and nutrition tracking
+
+**⏰ Timeline Expectations:**
+- Energy improvements: 1-2 weeks
+- Strength gains: 2-4 weeks
+- Visible changes: 4-8 weeks
+- Significant transformation: 3-6 months
+
+**🎯 Pro Tip:** Focus on trends over daily fluctuations!
+
+What aspect of your progress are you most curious about tracking?''';
+    }
+    
+    // Default response for any other questions
+    else {
+      return '''🤖 **AI FitBot - Your Fitness Assistant**
+
+Thanks for your question! I'm designed to help with a wide range of health and fitness topics:
+
+**🏋️ FITNESS & EXERCISE**
+- Workout routines and exercise form
+- Training programs for different goals
+- Equipment recommendations and alternatives
+
+**🍽️ NUTRITION & DIET** 
+- Meal planning and healthy recipes
+- Macronutrient guidance and calorie needs
+- Weight management strategies
+
+**� HEALTH & WELLNESS**
+- Sleep optimization and recovery
+- Stress management techniques
+- Building sustainable healthy habits
+
+**🎯 GOALS & MOTIVATION**
+- Setting realistic fitness goals
+- Staying motivated and consistent
+- Overcoming common challenges
+
+*Note: I'm currently using offline responses. For personalized AI-powered assistance, please configure your Groq API key.*
+
+What specific area would you like to explore? Feel free to ask me anything!''';
     }
   }
 
