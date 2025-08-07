@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_constants.dart';
+import '../../../../core/config/api_config.dart';
+import '../../../../core/services/groq_api_service.dart';
 import '../../../../shared/models/chat_message.dart';
+import 'api_settings_page.dart';
 
 class AiFitbotPage extends StatefulWidget {
   const AiFitbotPage({super.key});
@@ -15,6 +18,7 @@ class _AiFitbotPageState extends State<AiFitbotPage> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   bool _isTyping = false;
+  late GroqApiService? _groqService;
   
   final List<ChatMessage> _messages = [
     ChatMessage(
@@ -26,6 +30,54 @@ class _AiFitbotPageState extends State<AiFitbotPage> {
       quickReplies: AppConstants.quickReplies,
     ),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeGroqService();
+  }
+
+  void _initializeGroqService() {
+    print('DEBUG: Initializing Groq service...');
+    print('DEBUG: API Key configured: ${ApiConfig.isApiKeyConfigured}');
+    print('DEBUG: Use real API: ${ApiConfig.useRealApi}');
+    print('DEBUG: API Key: ${ApiConfig.groqApiKey.substring(0, 10)}...');
+    
+    if (ApiConfig.isApiKeyConfigured && ApiConfig.useRealApi) {
+      _groqService = GroqApiService(apiKey: ApiConfig.groqApiKey);
+      print('DEBUG: Groq service initialized successfully');
+    } else {
+      _groqService = null;
+      print('DEBUG: Using simulated responses');
+      // Show a one-time message about API configuration
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showApiConfigMessage();
+      });
+    }
+  }
+
+  void _showApiConfigMessage() {
+    if (!mounted) return;
+    
+    final configMessage = ChatMessage(
+      id: 'config_${DateTime.now().millisecondsSinceEpoch}',
+      content: '''🔧 **API Configuration Notice**
+
+To enable real AI conversations, please:
+1. Get a free API key from: https://console.groq.com/keys
+2. Update the API key in: lib/core/config/api_config.dart
+3. Restart the app
+
+For now, I'll use simulated responses to demonstrate the interface! 🤖''',
+      type: MessageType.text,
+      timestamp: DateTime.now(),
+      isFromUser: false,
+    );
+
+    setState(() {
+      _messages.insert(1, configMessage);
+    });
+  }
 
   @override
   void dispose() {
@@ -371,7 +423,6 @@ class _AiFitbotPageState extends State<AiFitbotPage> {
     _messageController.clear();
     _scrollToBottom();
 
-    // Simulate AI response
     _simulateAIResponse(text);
   }
 
@@ -380,10 +431,29 @@ class _AiFitbotPageState extends State<AiFitbotPage> {
     _sendMessage();
   }
 
-  void _simulateAIResponse(String userMessage) {
-    // Simulate AI processing delay
-    Future.delayed(const Duration(seconds: 2), () {
-      final aiResponse = _generateAIResponse(userMessage);
+  void _simulateAIResponse(String userMessage) async {
+    try {
+      String aiResponse;
+      print('DEBUG: Processing AI response for: $userMessage');
+      print('DEBUG: Groq service available: ${_groqService != null}');
+      
+      if (_groqService != null) {
+        print('DEBUG: Using real Groq API');
+        // Use real Groq API
+        final conversationHistory = _buildConversationHistory();
+        print('DEBUG: Conversation history length: ${conversationHistory.length}');
+        
+        aiResponse = await _groqService!.generateResponse(
+          userMessage: userMessage,
+          conversationHistory: conversationHistory,
+        );
+        print('DEBUG: Groq API response received: ${aiResponse.substring(0, 50)}...');
+      } else {
+        print('DEBUG: Using simulated response');
+        // Use fallback simulated response
+        await Future.delayed(const Duration(seconds: 1));
+        aiResponse = _generateSimulatedResponse(userMessage);
+      }
       
       final aiMessage = ChatMessage(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -393,16 +463,54 @@ class _AiFitbotPageState extends State<AiFitbotPage> {
         isFromUser: false,
       );
 
-      setState(() {
-        _isTyping = false;
-        _messages.add(aiMessage);
-      });
+      if (mounted) {
+        setState(() {
+          _isTyping = false;
+          _messages.add(aiMessage);
+        });
+        _scrollToBottom();
+      }
+    } catch (e) {
+      print('Error generating AI response: $e');
+      
+      final errorMessage = ChatMessage(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        content: 'Sorry, I encountered an error. Please try again! 🤖',
+        type: MessageType.text,
+        timestamp: DateTime.now(),
+        isFromUser: false,
+      );
 
-      _scrollToBottom();
-    });
+      if (mounted) {
+        setState(() {
+          _isTyping = false;
+          _messages.add(errorMessage);
+        });
+        _scrollToBottom();
+      }
+    }
   }
 
-  String _generateAIResponse(String userMessage) {
+  List<Map<String, String>> _buildConversationHistory() {
+    // Get last 10 messages (excluding system messages) for context
+    final recentMessages = _messages
+        .where((msg) => !msg.content.contains('🔧 **API Configuration Notice**'))
+        .take(10)
+        .toList();
+        
+    final history = <Map<String, String>>[];
+    
+    for (final message in recentMessages) {
+      history.add({
+        'role': message.isFromUser ? 'user' : 'assistant',
+        'content': message.content,
+      });
+    }
+    
+    return history;
+  }
+
+  String _generateSimulatedResponse(String userMessage) {
     final lowerMessage = userMessage.toLowerCase();
     
     if (lowerMessage.contains('workout') || lowerMessage.contains('exercise')) {
@@ -555,11 +663,26 @@ What specific area would you like to focus on today?''';
               },
             ),
             ListTile(
-              leading: const Icon(Icons.settings, color: AppColors.textSecondary),
+              leading: Icon(
+                Icons.settings, 
+                color: ApiConfig.isApiKeyConfigured 
+                    ? AppColors.secondary 
+                    : AppColors.accent,
+              ),
               title: const Text('AI Settings'),
+              subtitle: Text(
+                ApiConfig.isApiKeyConfigured 
+                    ? 'API configured' 
+                    : 'Configure Groq API key',
+              ),
               onTap: () {
                 Navigator.pop(context);
-                // Show AI settings
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ApiSettingsPage(),
+                  ),
+                );
               },
             ),
           ],

@@ -43,3 +43,46 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Security & API Keys
+*.env
+.env
+.env.*
+api_keys.dart
+secrets.dart
+config/secrets.json
+lib/core/config/api_config.dart
+**/api_config.dart
+
+# Firebase & Google Services
+google-services.json
+GoogleService-Info.plist
+firebase_options.dart
+
+# Private keys and certificates
+*.p12
+*.p8
+*.mobileprovision
+*.jks
+*.keystore
+key.properties
+
+# Environment specific
+/ios/Runner/GoogleService-Info.plist
+/android/app/google-services.json
+
+# IDE & Editor files
+.vscode/settings.json
+.vscode/launch.json
+*.code-workspace
+
+# Logs and debugging
+*.log
+logs/
+debug.log
+crash.log
+
+# Temporary files
+*.tmp
+*.temp
+.temp/

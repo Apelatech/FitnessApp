@@ -183,12 +183,37 @@ flutter build ios --release
 
 ## 🔧 Configuration
 
-### API Configuration
-Update the base URL in `lib/core/constants/app_constants.dart`:
-```dart
-static const String baseUrl = 'https://your-api-endpoint.com';
-static const String chatGptApiKey = 'your_openai_api_key';
-```
+### Groq AI API Setup (Required for AI Coach)
+
+To enable real AI conversations with the FitBot, you need to configure a Groq API key:
+
+1. **Get your free Groq API key:**
+   - Visit https://console.groq.com/keys
+   - Sign up or log in to your account
+   - Click "Create API Key" 
+   - Copy the generated key
+
+2. **Configure the API key:**
+   
+   **Option 1: In-App Configuration (Recommended)**
+   - Launch the app
+   - Navigate to AI FitBot → Options (⋮) → AI Settings
+   - Paste your API key and tap "Save & Test"
+   - Restart the app
+
+   **Option 2: Code Configuration**
+   - Open `lib/core/config/api_config.dart`
+   - Replace `YOUR_GROQ_API_KEY_HERE` with your actual API key:
+   ```dart
+   class ApiConfig {
+     static const String groqApiKey = 'your_actual_groq_api_key_here';
+     static const bool useRealApi = true;
+   }
+   ```
+
+3. **Verify Setup:**
+   - The AI FitBot will show a green status if configured correctly
+   - Without an API key, the app uses simulated responses for demo purposes
 
 ### Theme Customization
 Modify colors and styles in:
@@ -291,5 +316,6 @@ For support and questions:
 **Made with ❤️ by the ApelaTech Team**
 
 *Revolutionizing personal fitness with intelligent, accessible coaching.*
-#   a p e l a t e c h . c o m  
+#   a p e l a t e c h . c o m 
+ 
  
