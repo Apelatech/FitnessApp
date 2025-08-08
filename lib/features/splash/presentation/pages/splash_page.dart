@@ -429,7 +429,10 @@ class _SplashPageState extends State<SplashPage>
                   'assets/faviicon.svg',
                   width: 70,
                   height: 70,
-                  // Keep the original SVG colors (orange to blue gradient)
+                  colorFilter: const ColorFilter.mode(
+                    Colors.white,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
             ),

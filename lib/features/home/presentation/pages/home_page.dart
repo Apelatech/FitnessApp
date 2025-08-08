@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../shared/widgets/custom_button.dart';
 import '../../../../shared/widgets/custom_card.dart';
@@ -8,6 +9,7 @@ import '../../../workouts/presentation/pages/workouts_page.dart';
 import '../../../nutrition/presentation/pages/nutrition_page.dart';
 import '../../../analytics/presentation/pages/analytics_page.dart';
 import '../../../auth/presentation/pages/login_page.dart';
+import '../../../auth/providers/auth_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -225,37 +227,56 @@ class HomeContent extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      Text(
-                        'John Doe',
-                        style: theme.textTheme.headlineMedium?.copyWith(
-                          color: AppColors.textWhite,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Consumer<AuthProvider>(
+                        builder: (context, authProvider, child) {
+                          final user = authProvider.user;
+                          return Text(
+                            user != null
+                                ? 'Welcome back, ${user.displayNameOrEmail.split(' ').first}!'
+                                : 'Welcome to ApelaTech Fitness',
+                            style: theme.textTheme.headlineMedium?.copyWith(
+                              color: AppColors.textWhite,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const LoginPage(),
+                Consumer<AuthProvider>(
+                  builder: (context, authProvider, child) {
+                    final user = authProvider.user;
+                    
+                    return GestureDetector(
+                      onTap: () {
+                        if (user != null) {
+                          // Show profile/logout options
+                          _showProfileMenu(context, authProvider);
+                        } else {
+                          // Navigate to login
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LoginPage(),
+                            ),
+                          );
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppColors.textWhite.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          user != null ? Icons.account_circle : Icons.person_outline,
+                          color: AppColors.textWhite,
+                          size: 24,
+                        ),
                       ),
                     );
                   },
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: AppColors.textWhite.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(
-                      Icons.person_outline,
-                      color: AppColors.textWhite,
-                      size: 24,
-                    ),
-                  ),
                 ),
               ],
             ),
@@ -457,6 +478,110 @@ class HomeContent extends StatelessWidget {
             onTap: () {},
           ),
         ],
+      ),
+    );
+  }
+
+  void _showProfileMenu(BuildContext context, AuthProvider authProvider) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Profile Menu',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            
+            // User info
+            if (authProvider.user != null) ...[
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 24,
+                      backgroundColor: AppColors.accent,
+                      child: Text(
+                        authProvider.user!.initials,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            authProvider.user!.displayNameOrEmail,
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          if (authProvider.user!.email != null)
+                            Text(
+                              authProvider.user!.email!,
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+            
+            // Menu options
+            ListTile(
+              leading: const Icon(Icons.settings, color: AppColors.secondary),
+              title: const Text('Settings'),
+              onTap: () {
+                Navigator.pop(context);
+                // Navigate to settings page
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.help_outline, color: AppColors.accent),
+              title: const Text('Help & Support'),
+              onTap: () {
+                Navigator.pop(context);
+                // Navigate to help page
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout, color: AppColors.error),
+              title: const Text('Sign Out'),
+              onTap: () async {
+                Navigator.pop(context);
+                await authProvider.signOut();
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Signed out successfully'),
+                      backgroundColor: AppColors.success,
+                    ),
+                  );
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

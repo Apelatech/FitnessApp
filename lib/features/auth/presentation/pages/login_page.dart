@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../shared/widgets/custom_button.dart';
 import '../../../../shared/widgets/custom_card.dart';
+import '../../providers/auth_provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,7 +18,6 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
-  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -27,22 +28,32 @@ class _LoginPageState extends State<LoginPage> {
 
   void _handleLogin() async {
     if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
       
-      // Simulate login process
-      await Future.delayed(const Duration(seconds: 2));
-      
-      setState(() => _isLoading = false);
+      final success = await authProvider.signInWithEmailPassword(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
       
       if (mounted) {
-        // Navigate back to home or show success
-        Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Login successful!'),
-            backgroundColor: AppColors.success,
-          ),
-        );
+        if (success) {
+          // Navigate back to home and show success
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Login successful! Welcome back!'),
+              backgroundColor: AppColors.success,
+            ),
+          );
+        } else {
+          // Show error message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(authProvider.errorMessage ?? 'Login failed'),
+              backgroundColor: AppColors.error,
+            ),
+          );
+        }
       }
     }
   }
@@ -63,8 +74,6 @@ class _LoginPageState extends State<LoginPage> {
               _buildLoginForm(context, theme),
               const SizedBox(height: 32),
               _buildSocialLogin(context),
-              const SizedBox(height: 24),
-              _buildSignUpPrompt(context, theme),
             ],
           ),
         ),
@@ -126,8 +135,6 @@ class _LoginPageState extends State<LoginPage> {
             _buildEmailField(),
             const SizedBox(height: 16),
             _buildPasswordField(),
-            const SizedBox(height: 12),
-            _buildForgotPassword(theme),
             const SizedBox(height: 32),
             _buildLoginButton(),
           ],
@@ -200,50 +207,36 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildForgotPassword(ThemeData theme) {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: TextButton(
-        onPressed: () {
-          // Handle forgot password
-        },
-        child: Text(
-          'Forgot Password?',
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: AppColors.accent,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildLoginButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: _isLoading
-          ? Container(
-              height: 56,
-              decoration: BoxDecoration(
-                gradient: AppColors.primaryGradient,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Center(
-                child: SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 2,
+    return Consumer<AuthProvider>(
+      builder: (context, authProvider, child) {
+        return SizedBox(
+          width: double.infinity,
+          child: authProvider.isLoading
+              ? Container(
+                  height: 56,
+                  decoration: BoxDecoration(
+                    gradient: AppColors.primaryGradient,
+                    borderRadius: BorderRadius.circular(12),
                   ),
+                  child: const Center(
+                    child: SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    ),
+                  ),
+                )
+              : GradientButton(
+                  text: 'Sign In',
+                  gradient: AppColors.primaryGradient,
+                  onPressed: _handleLogin,
                 ),
-              ),
-            )
-          : GradientButton(
-              text: 'Sign In',
-              gradient: AppColors.primaryGradient,
-              onPressed: _handleLogin,
-            ),
+        );
+      },
     );
   }
 
@@ -274,8 +267,28 @@ class _LoginPageState extends State<LoginPage> {
                 child: _SocialLoginButton(
                   icon: Icons.g_mobiledata,
                   label: 'Google',
-                  onPressed: () {
-                    // Handle Google login
+                  onPressed: () async {
+                    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                    final success = await authProvider.signInWithGoogle();
+                    
+                    if (mounted) {
+                      if (success) {
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Google sign-in successful!'),
+                            backgroundColor: AppColors.success,
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(authProvider.errorMessage ?? 'Google sign-in failed'),
+                            backgroundColor: AppColors.error,
+                          ),
+                        );
+                      }
+                    }
                   },
                 ),
               ),
@@ -292,37 +305,6 @@ class _LoginPageState extends State<LoginPage> {
             ],
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildSignUpPrompt(BuildContext context, ThemeData theme) {
-    return FadeInUp(
-      duration: const Duration(milliseconds: 1000),
-      child: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Don\'t have an account? ',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                // Navigate to sign up page
-              },
-              child: Text(
-                'Sign Up',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: AppColors.accent,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
