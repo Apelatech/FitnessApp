@@ -74,6 +74,8 @@ class _LoginPageState extends State<LoginPage> {
               _buildLoginForm(context, theme),
               const SizedBox(height: 32),
               _buildSocialLogin(context),
+              const SizedBox(height: 32),
+              _buildDemoCredentials(context),
             ],
           ),
         ),
@@ -306,6 +308,120 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildDemoCredentials(BuildContext context) {
+    return FadeInUp(
+      duration: const Duration(milliseconds: 1000),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: AppColors.accent.withOpacity(0.2),
+            width: 1,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.info_outline,
+                  color: AppColors.accent,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Demo Credentials',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.accent,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            _buildCredentialRow(context, 'Email', 'admin@gmail.com'),
+            const SizedBox(height: 8),
+            _buildCredentialRow(context, 'Password', 'Admin123\$'),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Icon(
+                  Icons.copy,
+                  color: AppColors.textSecondary,
+                  size: 16,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  'Tap to copy credentials',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: AppColors.textSecondary,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCredentialRow(BuildContext context, String label, String value) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 80,
+          child: Text(
+            '$label:',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w500,
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ),
+        Expanded(
+          child: GestureDetector(
+            onTap: () {
+              // Copy to clipboard and fill the field
+              if (label == 'Email') {
+                _emailController.text = value;
+              } else if (label == 'Password') {
+                _passwordController.text = value;
+              }
+              
+              // Show feedback
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('$label copied and filled!'),
+                  backgroundColor: AppColors.success,
+                  duration: const Duration(seconds: 1),
+                ),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                color: AppColors.textSecondary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Text(
+                value,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontFamily: 'monospace',
+                  color: AppColors.textPrimary,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
