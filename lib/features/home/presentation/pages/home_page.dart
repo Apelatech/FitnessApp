@@ -175,8 +175,18 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class HomeContent extends StatelessWidget {
+class HomeContent extends StatefulWidget {
   const HomeContent({super.key});
+
+  @override
+  State<HomeContent> createState() => _HomeContentState();
+}
+
+class _HomeContentState extends State<HomeContent> {
+  int _waterCount = 0; // glasses of water
+  int _stepCount = 0; // number of steps
+  final int _waterGoal = 8; // 8 glasses per day
+  final int _stepGoal = 10000; // 10,000 steps per day
 
   @override
   Widget build(BuildContext context) {
@@ -193,6 +203,8 @@ class HomeContent extends StatelessWidget {
               _buildQuickActions(context),
               const SizedBox(height: 24),
               _buildStatsOverview(context),
+              const SizedBox(height: 24),
+              _buildTracking(context),
               const SizedBox(height: 24),
               _buildFeatureHighlights(context),
               const SizedBox(height: 24),
@@ -432,6 +444,69 @@ class HomeContent extends StatelessWidget {
                   subtitle: 'of 1 planned',
                   icon: Icons.fitness_center,
                   iconColor: AppColors.secondary,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTracking(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Daily Tracking',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: _TrackingCard(
+                  title: 'Water Intake',
+                  icon: Icons.water_drop,
+                  iconColor: AppColors.secondary,
+                  currentValue: _waterCount,
+                  goalValue: _waterGoal,
+                  unit: 'cups',
+                  onIncrement: () {
+                    setState(() {
+                      if (_waterCount < _waterGoal) _waterCount++;
+                    });
+                  },
+                  onDecrement: () {
+                    setState(() {
+                      if (_waterCount > 0) _waterCount--;
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _TrackingCard(
+                  title: 'Steps',
+                  icon: Icons.directions_walk,
+                  iconColor: AppColors.success,
+                  currentValue: _stepCount,
+                  goalValue: _stepGoal,
+                  unit: 'steps',
+                  onIncrement: () {
+                    setState(() {
+                      _stepCount += 100; // Increment by 100 steps
+                    });
+                  },
+                  onDecrement: () {
+                    setState(() {
+                      if (_stepCount >= 100) _stepCount -= 100;
+                    });
+                  },
                 ),
               ),
             ],
@@ -712,5 +787,150 @@ class _FeatureCard extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class _TrackingCard extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final Color iconColor;
+  final int currentValue;
+  final int goalValue;
+  final String unit;
+  final VoidCallback onIncrement;
+  final VoidCallback onDecrement;
+
+  const _TrackingCard({
+    required this.title,
+    required this.icon,
+    required this.iconColor,
+    required this.currentValue,
+    required this.goalValue,
+    required this.unit,
+    required this.onIncrement,
+    required this.onDecrement,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final progress = currentValue / goalValue;
+    final progressClamped = progress.clamp(0.0, 1.0);
+    
+    return CustomCard(
+      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.zero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: iconColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  icon,
+                  color: iconColor,
+                  size: 20,
+                ),
+              ),
+              const Spacer(),
+              Row(
+                children: [
+                  // Decrement button
+                  GestureDetector(
+                    onTap: onDecrement,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Icon(
+                        Icons.remove,
+                        size: 16,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  // Increment button
+                  GestureDetector(
+                    onTap: onIncrement,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: iconColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Icon(
+                        Icons.add,
+                        size: 16,
+                        color: iconColor,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            title,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 8),
+          // Progress bar
+          Container(
+            height: 6,
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(3),
+            ),
+            child: FractionallySizedBox(
+              alignment: Alignment.centerLeft,
+              widthFactor: progressClamped,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: iconColor,
+                  borderRadius: BorderRadius.circular(3),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                _formatValue(currentValue),
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: iconColor,
+                ),
+              ),
+              Text(
+                'Goal: ${_formatValue(goalValue)}',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatValue(int value) {
+    if (unit == 'steps' && value >= 1000) {
+      return '${(value / 1000).toStringAsFixed(1)}k';
+    }
+    return '$value $unit';
   }
 }

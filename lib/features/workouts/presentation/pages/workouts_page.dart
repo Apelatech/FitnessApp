@@ -25,81 +25,457 @@ class _WorkoutsPageState extends State<WorkoutsPage> with TickerProviderStateMix
     'Flexibility',
   ];
 
-  final List<Workout> _featuredWorkouts = [
+  // Fat Loss Workouts (10 workouts)
+  final List<Workout> _fatLossWorkouts = [
     Workout(
-      id: '1',
+      id: 'fl1',
       name: 'HIIT Fat Burner',
-      category: 'Cardio',
-      duration: 25,
-      calories: 300,
+      category: 'Fat Loss',
+      duration: 20,
+      calories: 280,
       difficulty: 'Intermediate',
-      description: 'High-intensity interval training to burn calories fast',
+      description: 'High-intensity interval training designed to maximize calorie burn and boost metabolism for hours after your workout.',
       exercises: [
-        Exercise(
-          id: '1',
-          name: 'Jumping Jacks',
-          type: 'cardio',
-          duration: 30,
-          restTime: 10,
-          muscleGroups: ['Full Body'],
-        ),
-        Exercise(
-          id: '2',
-          name: 'Burpees',
-          type: 'cardio',
-          duration: 30,
-          restTime: 15,
-          muscleGroups: ['Full Body'],
-        ),
-        Exercise(
-          id: '3',
-          name: 'Mountain Climbers',
-          type: 'cardio',
-          duration: 30,
-          restTime: 10,
-          muscleGroups: ['Core', 'Arms'],
-        ),
+        Exercise(id: '1', name: 'Jumping Jacks', type: 'cardio', duration: 45, restTime: 15, muscleGroups: ['Full Body']),
+        Exercise(id: '2', name: 'Burpees', type: 'cardio', duration: 30, restTime: 30, muscleGroups: ['Full Body']),
+        Exercise(id: '3', name: 'Mountain Climbers', type: 'cardio', duration: 45, restTime: 15, muscleGroups: ['Core', 'Arms']),
       ],
     ),
     Workout(
-      id: '2',
-      name: 'Upper Body Strength',
-      category: 'Strength',
-      duration: 45,
+      id: 'fl2',
+      name: 'Cardio Blast',
+      category: 'Fat Loss',
+      duration: 20,
       calories: 250,
       difficulty: 'Beginner',
-      description: 'Build upper body strength with bodyweight exercises',
+      description: 'A dynamic cardio workout that combines fun movements to keep your heart rate elevated and burn maximum calories.',
       exercises: [
-        Exercise(
-          id: '4',
-          name: 'Push-ups',
-          type: 'strength',
-          sets: 3,
-          reps: 12,
-          restTime: 60,
-          muscleGroups: ['Chest', 'Arms', 'Shoulders'],
-        ),
-        Exercise(
-          id: '5',
-          name: 'Pike Push-ups',
-          type: 'strength',
-          sets: 3,
-          reps: 8,
-          restTime: 60,
-          muscleGroups: ['Shoulders', 'Arms'],
-        ),
-        Exercise(
-          id: '6',
-          name: 'Tricep Dips',
-          type: 'strength',
-          sets: 3,
-          reps: 10,
-          restTime: 60,
-          muscleGroups: ['Arms'],
-        ),
+        Exercise(id: '4', name: 'High Knees', type: 'cardio', duration: 30, restTime: 15, muscleGroups: ['Legs', 'Core']),
+        Exercise(id: '5', name: 'Butt Kicks', type: 'cardio', duration: 30, restTime: 15, muscleGroups: ['Legs']),
+        Exercise(id: '6', name: 'Side Steps', type: 'cardio', duration: 30, restTime: 15, muscleGroups: ['Legs', 'Glutes']),
+      ],
+    ),
+    Workout(
+      id: 'fl3',
+      name: 'Tabata Torch',
+      category: 'Fat Loss',
+      duration: 20,
+      calories: 320,
+      difficulty: 'Advanced',
+      description: 'Intense 4-minute Tabata rounds that will torch calories and improve your anaerobic capacity in a short time.',
+      exercises: [
+        Exercise(id: '7', name: 'Squat Jumps', type: 'cardio', duration: 20, restTime: 10, muscleGroups: ['Legs', 'Glutes']),
+        Exercise(id: '8', name: 'Push-up Burpees', type: 'cardio', duration: 20, restTime: 10, muscleGroups: ['Full Body']),
+        Exercise(id: '9', name: 'Plank Jacks', type: 'cardio', duration: 20, restTime: 10, muscleGroups: ['Core', 'Shoulders']),
+      ],
+    ),
+    Workout(
+      id: 'fl4',
+      name: 'Circuit Shred',
+      category: 'Fat Loss',
+      duration: 20,
+      calories: 275,
+      difficulty: 'Intermediate',
+      description: 'A fast-paced circuit combining strength and cardio movements to maximize fat burning in minimal time.',
+      exercises: [
+        Exercise(id: '10', name: 'Thrusters', type: 'cardio', duration: 40, restTime: 20, muscleGroups: ['Full Body']),
+        Exercise(id: '11', name: 'Bear Crawls', type: 'cardio', duration: 30, restTime: 30, muscleGroups: ['Full Body']),
+        Exercise(id: '12', name: 'Star Jumps', type: 'cardio', duration: 30, restTime: 30, muscleGroups: ['Full Body']),
+      ],
+    ),
+    Workout(
+      id: 'fl5',
+      name: 'Metabolic Meltdown',
+      category: 'Fat Loss',
+      duration: 20,
+      calories: 300,
+      difficulty: 'Advanced',
+      description: 'A metabolic conditioning workout that combines compound movements to maximize calorie burn and afterburn effect.',
+      exercises: [
+        Exercise(id: '13', name: 'Kettlebell Swings', type: 'cardio', duration: 45, restTime: 15, muscleGroups: ['Full Body']),
+        Exercise(id: '14', name: 'Box Jumps', type: 'cardio', duration: 30, restTime: 30, muscleGroups: ['Legs', 'Glutes']),
+        Exercise(id: '15', name: 'Battle Ropes', type: 'cardio', duration: 30, restTime: 30, muscleGroups: ['Arms', 'Core']),
+      ],
+    ),
+    Workout(
+      id: 'fl6',
+      name: 'Dance Cardio',
+      category: 'Fat Loss',
+      duration: 20,
+      calories: 220,
+      difficulty: 'Beginner',
+      description: 'Fun, dance-inspired movements that make cardio enjoyable while burning calories and improving coordination.',
+      exercises: [
+        Exercise(id: '16', name: 'Grapevines', type: 'cardio', duration: 45, restTime: 15, muscleGroups: ['Legs', 'Core']),
+        Exercise(id: '17', name: 'Hip Circles', type: 'cardio', duration: 30, restTime: 15, muscleGroups: ['Core', 'Hips']),
+        Exercise(id: '18', name: 'Arm Waves', type: 'cardio', duration: 30, restTime: 15, muscleGroups: ['Arms', 'Core']),
+      ],
+    ),
+    Workout(
+      id: 'fl7',
+      name: 'Sprint Intervals',
+      category: 'Fat Loss',
+      duration: 20,
+      calories: 340,
+      difficulty: 'Advanced',
+      description: 'High-intensity sprint intervals that rapidly increase heart rate and maximize fat oxidation in a short timeframe.',
+      exercises: [
+        Exercise(id: '19', name: 'Running in Place', type: 'cardio', duration: 30, restTime: 30, muscleGroups: ['Legs', 'Core']),
+        Exercise(id: '20', name: 'Fast Feet', type: 'cardio', duration: 20, restTime: 40, muscleGroups: ['Legs']),
+        Exercise(id: '21', name: 'Lateral Shuffles', type: 'cardio', duration: 30, restTime: 30, muscleGroups: ['Legs', 'Glutes']),
+      ],
+    ),
+    Workout(
+      id: 'fl8',
+      name: 'Core Cardio Fusion',
+      category: 'Fat Loss',
+      duration: 20,
+      calories: 260,
+      difficulty: 'Intermediate',
+      description: 'A unique blend of core strengthening and cardio exercises that target your midsection while burning calories.',
+      exercises: [
+        Exercise(id: '22', name: 'Russian Twists', type: 'cardio', duration: 45, restTime: 15, muscleGroups: ['Core']),
+        Exercise(id: '23', name: 'Bicycle Crunches', type: 'cardio', duration: 45, restTime: 15, muscleGroups: ['Core']),
+        Exercise(id: '24', name: 'Plank Up-Downs', type: 'cardio', duration: 30, restTime: 30, muscleGroups: ['Core', 'Arms']),
+      ],
+    ),
+    Workout(
+      id: 'fl9',
+      name: 'Plyometric Power',
+      category: 'Fat Loss',
+      duration: 20,
+      calories: 310,
+      difficulty: 'Advanced',
+      description: 'Explosive plyometric exercises that build power while creating a massive caloric demand on your body.',
+      exercises: [
+        Exercise(id: '25', name: 'Jump Squats', type: 'cardio', duration: 30, restTime: 30, muscleGroups: ['Legs', 'Glutes']),
+        Exercise(id: '26', name: 'Tuck Jumps', type: 'cardio', duration: 20, restTime: 40, muscleGroups: ['Legs', 'Core']),
+        Exercise(id: '27', name: 'Lateral Bounds', type: 'cardio', duration: 30, restTime: 30, muscleGroups: ['Legs', 'Glutes']),
+      ],
+    ),
+    Workout(
+      id: 'fl10',
+      name: 'Bodyweight Burn',
+      category: 'Fat Loss',
+      duration: 20,
+      calories: 240,
+      difficulty: 'Beginner',
+      description: 'Accessible bodyweight movements that anyone can do to start their fat loss journey effectively.',
+      exercises: [
+        Exercise(id: '28', name: 'Wall Sits', type: 'cardio', duration: 30, restTime: 30, muscleGroups: ['Legs', 'Glutes']),
+        Exercise(id: '29', name: 'Arm Circles', type: 'cardio', duration: 30, restTime: 15, muscleGroups: ['Arms', 'Shoulders']),
+        Exercise(id: '30', name: 'Marching in Place', type: 'cardio', duration: 45, restTime: 15, muscleGroups: ['Legs', 'Core']),
       ],
     ),
   ];
+
+  // Muscle Gain Workouts (10 workouts)
+  final List<Workout> _muscleGainWorkouts = [
+    Workout(
+      id: 'mg1',
+      name: 'Upper Body Builder',
+      category: 'Muscle Gain',
+      duration: 20,
+      calories: 180,
+      difficulty: 'Intermediate',
+      description: 'Comprehensive upper body workout targeting chest, shoulders, and arms for maximum muscle development.',
+      exercises: [
+        Exercise(id: '31', name: 'Push-ups', type: 'strength', sets: 3, reps: 12, restTime: 60, muscleGroups: ['Chest', 'Arms']),
+        Exercise(id: '32', name: 'Pike Push-ups', type: 'strength', sets: 3, reps: 10, restTime: 60, muscleGroups: ['Shoulders']),
+        Exercise(id: '33', name: 'Tricep Dips', type: 'strength', sets: 3, reps: 8, restTime: 60, muscleGroups: ['Arms']),
+      ],
+    ),
+    Workout(
+      id: 'mg2',
+      name: 'Lower Power',
+      category: 'Muscle Gain',
+      duration: 20,
+      calories: 200,
+      difficulty: 'Intermediate',
+      description: 'Intense lower body focused routine designed to build powerful legs and glutes through progressive overload.',
+      exercises: [
+        Exercise(id: '34', name: 'Squats', type: 'strength', sets: 4, reps: 15, restTime: 90, muscleGroups: ['Legs', 'Glutes']),
+        Exercise(id: '35', name: 'Lunges', type: 'strength', sets: 3, reps: 12, restTime: 60, muscleGroups: ['Legs', 'Glutes']),
+        Exercise(id: '36', name: 'Calf Raises', type: 'strength', sets: 3, reps: 20, restTime: 45, muscleGroups: ['Calves']),
+      ],
+    ),
+    Workout(
+      id: 'mg3',
+      name: 'Core Constructor',
+      category: 'Muscle Gain',
+      duration: 20,
+      calories: 160,
+      difficulty: 'Beginner',
+      description: 'Core-focused workout that builds a strong foundation and develops visible abdominal muscles.',
+      exercises: [
+        Exercise(id: '37', name: 'Planks', type: 'strength', duration: 60, restTime: 60, muscleGroups: ['Core']),
+        Exercise(id: '38', name: 'Crunches', type: 'strength', sets: 3, reps: 20, restTime: 45, muscleGroups: ['Core']),
+        Exercise(id: '39', name: 'Dead Bug', type: 'strength', sets: 3, reps: 10, restTime: 45, muscleGroups: ['Core']),
+      ],
+    ),
+    Workout(
+      id: 'mg4',
+      name: 'Full Body Mass',
+      category: 'Muscle Gain',
+      duration: 20,
+      calories: 220,
+      difficulty: 'Advanced',
+      description: 'Complete full-body routine utilizing compound movements to stimulate maximum muscle growth.',
+      exercises: [
+        Exercise(id: '40', name: 'Burpees', type: 'strength', sets: 3, reps: 8, restTime: 90, muscleGroups: ['Full Body']),
+        Exercise(id: '41', name: 'Pull-ups', type: 'strength', sets: 3, reps: 6, restTime: 120, muscleGroups: ['Back', 'Arms']),
+        Exercise(id: '42', name: 'Jump Squats', type: 'strength', sets: 3, reps: 10, restTime: 60, muscleGroups: ['Legs']),
+      ],
+    ),
+    Workout(
+      id: 'mg5',
+      name: 'Back & Biceps',
+      category: 'Muscle Gain',
+      duration: 20,
+      calories: 170,
+      difficulty: 'Intermediate',
+      description: 'Targeted back and bicep workout to build a wide, strong back and sculpted arms.',
+      exercises: [
+        Exercise(id: '43', name: 'Reverse Fly', type: 'strength', sets: 3, reps: 12, restTime: 60, muscleGroups: ['Back']),
+        Exercise(id: '44', name: 'Superman', type: 'strength', sets: 3, reps: 15, restTime: 45, muscleGroups: ['Back']),
+        Exercise(id: '45', name: 'Wall Handstand', type: 'strength', duration: 30, restTime: 90, muscleGroups: ['Shoulders', 'Arms']),
+      ],
+    ),
+    Workout(
+      id: 'mg6',
+      name: 'Chest Sculptor',
+      category: 'Muscle Gain',
+      duration: 20,
+      calories: 190,
+      difficulty: 'Intermediate',
+      description: 'Chest-focused routine with various push-up variations to build a powerful and defined chest.',
+      exercises: [
+        Exercise(id: '46', name: 'Wide Push-ups', type: 'strength', sets: 3, reps: 10, restTime: 60, muscleGroups: ['Chest']),
+        Exercise(id: '47', name: 'Diamond Push-ups', type: 'strength', sets: 3, reps: 8, restTime: 90, muscleGroups: ['Chest', 'Arms']),
+        Exercise(id: '48', name: 'Incline Push-ups', type: 'strength', sets: 3, reps: 12, restTime: 60, muscleGroups: ['Chest']),
+      ],
+    ),
+    Workout(
+      id: 'mg7',
+      name: 'Shoulder Shaper',
+      category: 'Muscle Gain',
+      duration: 20,
+      calories: 175,
+      difficulty: 'Beginner',
+      description: 'Comprehensive shoulder workout to build rounded, defined deltoids and improve upper body aesthetics.',
+      exercises: [
+        Exercise(id: '49', name: 'Shoulder Shrugs', type: 'strength', sets: 3, reps: 15, restTime: 45, muscleGroups: ['Shoulders']),
+        Exercise(id: '50', name: 'Arm Raises', type: 'strength', sets: 3, reps: 12, restTime: 45, muscleGroups: ['Shoulders']),
+        Exercise(id: '51', name: 'Wall Angels', type: 'strength', sets: 3, reps: 15, restTime: 45, muscleGroups: ['Shoulders']),
+      ],
+    ),
+    Workout(
+      id: 'mg8',
+      name: 'Glute Gains',
+      category: 'Muscle Gain',
+      duration: 20,
+      calories: 185,
+      difficulty: 'Intermediate',
+      description: 'Glute-focused workout designed to build strong, shapely glutes through targeted exercises.',
+      exercises: [
+        Exercise(id: '52', name: 'Glute Bridges', type: 'strength', sets: 3, reps: 15, restTime: 60, muscleGroups: ['Glutes']),
+        Exercise(id: '53', name: 'Single Leg Glute Bridge', type: 'strength', sets: 3, reps: 10, restTime: 60, muscleGroups: ['Glutes']),
+        Exercise(id: '54', name: 'Fire Hydrants', type: 'strength', sets: 3, reps: 12, restTime: 45, muscleGroups: ['Glutes']),
+      ],
+    ),
+    Workout(
+      id: 'mg9',
+      name: 'Arm Amplifier',
+      category: 'Muscle Gain',
+      duration: 20,
+      calories: 165,
+      difficulty: 'Beginner',
+      description: 'Focused arm workout targeting biceps and triceps for improved arm definition and strength.',
+      exercises: [
+        Exercise(id: '55', name: 'Wall Push-ups', type: 'strength', sets: 3, reps: 15, restTime: 45, muscleGroups: ['Arms']),
+        Exercise(id: '56', name: 'Arm Circles', type: 'strength', sets: 3, reps: 20, restTime: 30, muscleGroups: ['Arms']),
+        Exercise(id: '57', name: 'Isometric Holds', type: 'strength', duration: 30, restTime: 60, muscleGroups: ['Arms']),
+      ],
+    ),
+    Workout(
+      id: 'mg10',
+      name: 'Foundation Builder',
+      category: 'Muscle Gain',
+      duration: 20,
+      calories: 210,
+      difficulty: 'Advanced',
+      description: 'Advanced compound movement workout that builds overall muscle mass and functional strength.',
+      exercises: [
+        Exercise(id: '58', name: 'Hindu Push-ups', type: 'strength', sets: 3, reps: 8, restTime: 90, muscleGroups: ['Full Body']),
+        Exercise(id: '59', name: 'Pistol Squats', type: 'strength', sets: 3, reps: 5, restTime: 120, muscleGroups: ['Legs']),
+        Exercise(id: '60', name: 'L-Sits', type: 'strength', duration: 20, restTime: 90, muscleGroups: ['Core', 'Arms']),
+      ],
+    ),
+  ];
+
+  // Strength Workouts (10 workouts)
+  final List<Workout> _strengthWorkouts = [
+    Workout(
+      id: 'st1',
+      name: 'Power Foundation',
+      category: 'Strength',
+      duration: 20,
+      calories: 190,
+      difficulty: 'Beginner',
+      description: 'Essential strength-building exercises that form the foundation for all advanced strength training.',
+      exercises: [
+        Exercise(id: '61', name: 'Bodyweight Squats', type: 'strength', sets: 4, reps: 12, restTime: 90, muscleGroups: ['Legs']),
+        Exercise(id: '62', name: 'Push-ups', type: 'strength', sets: 3, reps: 10, restTime: 60, muscleGroups: ['Chest', 'Arms']),
+        Exercise(id: '63', name: 'Planks', type: 'strength', duration: 45, restTime: 60, muscleGroups: ['Core']),
+      ],
+    ),
+    Workout(
+      id: 'st2',
+      name: 'Iron Core',
+      category: 'Strength',
+      duration: 20,
+      calories: 170,
+      difficulty: 'Intermediate',
+      description: 'Intense core strengthening routine that builds bulletproof abdominals and spine stability.',
+      exercises: [
+        Exercise(id: '64', name: 'Hollow Body Hold', type: 'strength', duration: 30, restTime: 60, muscleGroups: ['Core']),
+        Exercise(id: '65', name: 'V-Ups', type: 'strength', sets: 3, reps: 12, restTime: 60, muscleGroups: ['Core']),
+        Exercise(id: '66', name: 'Side Planks', type: 'strength', duration: 30, restTime: 45, muscleGroups: ['Core']),
+      ],
+    ),
+    Workout(
+      id: 'st3',
+      name: 'Upper Domination',
+      category: 'Strength',
+      duration: 20,
+      calories: 200,
+      difficulty: 'Advanced',
+      description: 'Advanced upper body strength workout focusing on maximum force production and muscle recruitment.',
+      exercises: [
+        Exercise(id: '67', name: 'Archer Push-ups', type: 'strength', sets: 3, reps: 6, restTime: 120, muscleGroups: ['Chest', 'Arms']),
+        Exercise(id: '68', name: 'Handstand Hold', type: 'strength', duration: 15, restTime: 120, muscleGroups: ['Shoulders', 'Arms']),
+        Exercise(id: '69', name: 'Pseudo Planche', type: 'strength', duration: 20, restTime: 90, muscleGroups: ['Shoulders', 'Core']),
+      ],
+    ),
+    Workout(
+      id: 'st4',
+      name: 'Leg Fortress',
+      category: 'Strength',
+      duration: 20,
+      calories: 210,
+      difficulty: 'Intermediate',
+      description: 'Lower body strength routine designed to build powerful legs and unshakeable stability.',
+      exercises: [
+        Exercise(id: '70', name: 'Single Leg Squats', type: 'strength', sets: 3, reps: 8, restTime: 90, muscleGroups: ['Legs']),
+        Exercise(id: '71', name: 'Bulgarian Split Squats', type: 'strength', sets: 3, reps: 10, restTime: 90, muscleGroups: ['Legs']),
+        Exercise(id: '72', name: 'Wall Sit', type: 'strength', duration: 60, restTime: 90, muscleGroups: ['Legs']),
+      ],
+    ),
+    Workout(
+      id: 'st5',
+      name: 'Functional Power',
+      category: 'Strength',
+      duration: 20,
+      calories: 220,
+      difficulty: 'Advanced',
+      description: 'Functional strength movements that translate directly to real-world power and athletic performance.',
+      exercises: [
+        Exercise(id: '73', name: 'Burpee Variations', type: 'strength', sets: 3, reps: 6, restTime: 120, muscleGroups: ['Full Body']),
+        Exercise(id: '74', name: 'Turkish Get-ups', type: 'strength', sets: 2, reps: 4, restTime: 150, muscleGroups: ['Full Body']),
+        Exercise(id: '75', name: 'Bear Crawls', type: 'strength', duration: 30, restTime: 90, muscleGroups: ['Full Body']),
+      ],
+    ),
+    Workout(
+      id: 'st6',
+      name: 'Back Fortress',
+      category: 'Strength',
+      duration: 20,
+      calories: 185,
+      difficulty: 'Intermediate',
+      description: 'Back-strengthening routine to build a strong posterior chain and improve posture.',
+      exercises: [
+        Exercise(id: '76', name: 'Superman Holds', type: 'strength', duration: 30, restTime: 60, muscleGroups: ['Back']),
+        Exercise(id: '77', name: 'Reverse Snow Angels', type: 'strength', sets: 3, reps: 15, restTime: 60, muscleGroups: ['Back']),
+        Exercise(id: '78', name: 'Good Mornings', type: 'strength', sets: 3, reps: 12, restTime: 60, muscleGroups: ['Back', 'Glutes']),
+      ],
+    ),
+    Workout(
+      id: 'st7',
+      name: 'Grip & Carry',
+      category: 'Strength',
+      duration: 20,
+      calories: 175,
+      difficulty: 'Beginner',
+      description: 'Grip and carrying strength workout that builds practical, everyday functional strength.',
+      exercises: [
+        Exercise(id: '79', name: 'Farmer Walks', type: 'strength', duration: 45, restTime: 60, muscleGroups: ['Full Body']),
+        Exercise(id: '80', name: 'Dead Hangs', type: 'strength', duration: 20, restTime: 90, muscleGroups: ['Arms', 'Back']),
+        Exercise(id: '81', name: 'Suitcase Carry', type: 'strength', duration: 30, restTime: 60, muscleGroups: ['Core', 'Arms']),
+      ],
+    ),
+    Workout(
+      id: 'st8',
+      name: 'Unilateral Force',
+      category: 'Strength',
+      duration: 20,
+      calories: 195,
+      difficulty: 'Advanced',
+      description: 'Single-limb strength exercises that eliminate imbalances and build true functional power.',
+      exercises: [
+        Exercise(id: '82', name: 'Single Arm Push-ups', type: 'strength', sets: 2, reps: 4, restTime: 150, muscleGroups: ['Chest', 'Arms']),
+        Exercise(id: '83', name: 'Shrimp Squats', type: 'strength', sets: 2, reps: 3, restTime: 120, muscleGroups: ['Legs']),
+        Exercise(id: '84', name: 'Single Leg RDL', type: 'strength', sets: 3, reps: 8, restTime: 90, muscleGroups: ['Legs', 'Glutes']),
+      ],
+    ),
+    Workout(
+      id: 'st9',
+      name: 'Isometric Iron',
+      category: 'Strength',
+      duration: 20,
+      calories: 160,
+      difficulty: 'Intermediate',
+      description: 'Isometric holds that build incredible strength and muscular endurance through static contractions.',
+      exercises: [
+        Exercise(id: '85', name: 'Plank Variations', type: 'strength', duration: 45, restTime: 60, muscleGroups: ['Core']),
+        Exercise(id: '86', name: 'Wall Sit Hold', type: 'strength', duration: 60, restTime: 90, muscleGroups: ['Legs']),
+        Exercise(id: '87', name: 'Glute Bridge Hold', type: 'strength', duration: 45, restTime: 60, muscleGroups: ['Glutes']),
+      ],
+    ),
+    Workout(
+      id: 'st10',
+      name: 'Compound King',
+      category: 'Strength',
+      duration: 20,
+      calories: 240,
+      difficulty: 'Advanced',
+      description: 'The ultimate compound movement workout that builds total-body strength and coordination.',
+      exercises: [
+        Exercise(id: '88', name: 'Muscle-ups', type: 'strength', sets: 2, reps: 3, restTime: 180, muscleGroups: ['Full Body']),
+        Exercise(id: '89', name: 'Human Flag Progression', type: 'strength', duration: 10, restTime: 120, muscleGroups: ['Core', 'Arms']),
+        Exercise(id: '90', name: 'One Arm Handstand', type: 'strength', duration: 5, restTime: 180, muscleGroups: ['Shoulders', 'Core']),
+      ],
+    ),
+  ];
+
+  // Combined workout list based on selected category
+  List<Workout> get _filteredWorkouts {
+    if (_selectedGoalIndex == 0) {
+      // All workouts
+      return [..._fatLossWorkouts, ..._muscleGainWorkouts, ..._strengthWorkouts];
+    } else if (_selectedGoalIndex == 1) {
+      // Fat Loss
+      return _fatLossWorkouts;
+    } else if (_selectedGoalIndex == 2) {
+      // Muscle Gain
+      return _muscleGainWorkouts;
+    } else if (_selectedGoalIndex == 3) {
+      // Strength
+      return _strengthWorkouts;
+    } else {
+      // For other categories, return featured workouts for now
+      return _fatLossWorkouts.take(3).toList();
+    }
+  }
 
   @override
   void initState() {
@@ -328,9 +704,9 @@ class _WorkoutsPageState extends State<WorkoutsPage> with TickerProviderStateMix
         ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: _featuredWorkouts.length,
+          itemCount: _filteredWorkouts.length,
           itemBuilder: (context, index) {
-            final workout = _featuredWorkouts[index];
+            final workout = _filteredWorkouts[index];
             return FadeInUp(
               duration: Duration(milliseconds: 300 + (index * 100)),
               child: _buildWorkoutCard(workout),
@@ -475,29 +851,38 @@ class _WorkoutsPageState extends State<WorkoutsPage> with TickerProviderStateMix
               child: CustomCard(
                 onTap: () => _showCategoryWorkouts(category['name'] as String),
                 margin: EdgeInsets.zero,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: (category['color'] as Color).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(16),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: (category['color'] as Color).withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Icon(
+                          category['icon'] as IconData,
+                          color: category['color'] as Color,
+                          size: 28,
+                        ),
                       ),
-                      child: Icon(
-                        category['icon'] as IconData,
-                        color: category['color'] as Color,
-                        size: 32,
+                      const SizedBox(height: 8),
+                      Flexible(
+                        child: Text(
+                          category['name'] as String,
+                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      category['name'] as String,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             );

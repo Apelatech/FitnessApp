@@ -170,16 +170,20 @@ class GradientButton extends StatelessWidget {
                           Icon(
                             icon,
                             color: AppColors.textWhite,
-                            size: 20,
+                            size: 18,
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: 6),
                         ],
-                        Text(
-                          text,
-                          style: const TextStyle(
-                            color: AppColors.textWhite,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                        Flexible(
+                          child: Text(
+                            text,
+                            style: const TextStyle(
+                              color: AppColors.textWhite,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
                         ),
                       ],
