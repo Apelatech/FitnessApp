@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/services/workout_tracking_service.dart';
 import '../../../../shared/widgets/custom_button.dart';
 import '../../../../shared/widgets/custom_card.dart';
 import '../../../../shared/models/workout.dart';
@@ -15,6 +16,7 @@ class WorkoutsPage extends StatefulWidget {
 class _WorkoutsPageState extends State<WorkoutsPage> with TickerProviderStateMixin {
   late TabController _tabController;
   int _selectedGoalIndex = 0;
+  final WorkoutTrackingService _workoutService = WorkoutTrackingService();
   
   final List<String> _fitnessGoals = [
     'All',
@@ -1052,7 +1054,7 @@ class _WorkoutsPageState extends State<WorkoutsPage> with TickerProviderStateMix
               subtitle: const Text('Quick cardio session'),
               onTap: () {
                 Navigator.pop(context);
-                // Start quick workout
+                _startQuickCardioWorkout();
               },
             ),
             ListTile(
@@ -1061,7 +1063,7 @@ class _WorkoutsPageState extends State<WorkoutsPage> with TickerProviderStateMix
               subtitle: const Text('Bodyweight exercises'),
               onTap: () {
                 Navigator.pop(context);
-                // Start strength workout
+                _startQuickStrengthWorkout();
               },
             ),
             ListTile(
@@ -1070,7 +1072,7 @@ class _WorkoutsPageState extends State<WorkoutsPage> with TickerProviderStateMix
               subtitle: const Text('Flexibility and relaxation'),
               onTap: () {
                 Navigator.pop(context);
-                // Start stretch routine
+                _startQuickStretchWorkout();
               },
             ),
           ],
@@ -1162,7 +1164,7 @@ class _WorkoutsPageState extends State<WorkoutsPage> with TickerProviderStateMix
                 width: double.infinity,
                 onPressed: () {
                   Navigator.pop(context);
-                  // Start workout
+                  _startWorkout(workout);
                 },
               ),
             ],
@@ -1173,6 +1175,110 @@ class _WorkoutsPageState extends State<WorkoutsPage> with TickerProviderStateMix
   }
 
   void _showCategoryWorkouts(String category) {
-    // Navigate to category-specific workouts
+    // Implementation for showing category-specific workouts
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Showing $category workouts')),
+    );
+  }
+
+  // Quick workout methods that integrate with Firebase
+  Future<void> _startQuickCardioWorkout() async {
+    final quickCardio = Workout(
+      id: 'quick_cardio',
+      name: '5-Min Energy Boost',
+      category: 'Fat Loss',
+      duration: 5,
+      calories: 50,
+      difficulty: 'Beginner',
+      description: 'Quick cardio session to boost energy',
+      exercises: [
+        Exercise(id: 'qc1', name: 'Jumping Jacks', type: 'cardio', duration: 60, restTime: 30, muscleGroups: ['Full Body']),
+        Exercise(id: 'qc2', name: 'High Knees', type: 'cardio', duration: 60, restTime: 30, muscleGroups: ['Legs']),
+        Exercise(id: 'qc3', name: 'Butt Kicks', type: 'cardio', duration: 60, restTime: 30, muscleGroups: ['Legs']),
+      ],
+    );
+    await _startWorkout(quickCardio);
+  }
+
+  Future<void> _startQuickStrengthWorkout() async {
+    final quickStrength = Workout(
+      id: 'quick_strength',
+      name: '10-Min Strength',
+      category: 'Muscle Gain',
+      duration: 10,
+      calories: 80,
+      difficulty: 'Intermediate',
+      description: 'Bodyweight strength exercises',
+      exercises: [
+        Exercise(id: 'qs1', name: 'Push-ups', type: 'strength', sets: 2, reps: 10, restTime: 60, muscleGroups: ['Chest', 'Arms']),
+        Exercise(id: 'qs2', name: 'Squats', type: 'strength', sets: 2, reps: 15, restTime: 60, muscleGroups: ['Legs']),
+        Exercise(id: 'qs3', name: 'Planks', type: 'strength', duration: 30, restTime: 60, muscleGroups: ['Core']),
+      ],
+    );
+    await _startWorkout(quickStrength);
+  }
+
+  Future<void> _startQuickStretchWorkout() async {
+    final quickStretch = Workout(
+      id: 'quick_stretch',
+      name: '15-Min Stretch',
+      category: 'Flexibility',
+      duration: 15,
+      calories: 40,
+      difficulty: 'Beginner',
+      description: 'Flexibility and relaxation routine',
+      exercises: [
+        Exercise(id: 'qst1', name: 'Cat-Cow Stretch', type: 'stretching', duration: 60, restTime: 15, muscleGroups: ['Back']),
+        Exercise(id: 'qst2', name: 'Child\'s Pose', type: 'stretching', duration: 90, restTime: 15, muscleGroups: ['Back', 'Shoulders']),
+        Exercise(id: 'qst3', name: 'Forward Fold', type: 'stretching', duration: 60, restTime: 15, muscleGroups: ['Back', 'Legs']),
+      ],
+    );
+    await _startWorkout(quickStretch);
+  }
+
+  // Main method to start any workout using Firebase
+  Future<void> _startWorkout(Workout workout) async {
+    try {
+      // Show loading indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+
+      // Start workout session in Firebase
+      final session = await _workoutService.startWorkout(workout);
+      
+      // Close loading indicator
+      Navigator.pop(context);
+
+      if (session != null) {
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Started workout: ${workout.name}'),
+            backgroundColor: AppColors.success,
+          ),
+        );
+
+        // Navigate to workout session page (you can implement this)
+        // Navigator.push(context, MaterialPageRoute(
+        //   builder: (context) => WorkoutSessionPage(session: session),
+        // ));
+      }
+    } catch (e) {
+      // Close loading indicator if still showing
+      Navigator.pop(context);
+      
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to start workout: $e'),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    }
   }
 }

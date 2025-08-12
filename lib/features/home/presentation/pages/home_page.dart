@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/services/daily_tracking_service.dart';
+import '../../../../shared/models/daily_tracking.dart';
 import '../../../../shared/widgets/custom_button.dart';
 import '../../../../shared/widgets/custom_card.dart';
 import '../../../ai_fitbot/presentation/pages/ai_fitbot_page.dart';
@@ -9,7 +12,7 @@ import '../../../workouts/presentation/pages/workouts_page.dart';
 import '../../../nutrition/presentation/pages/nutrition_page.dart';
 import '../../../analytics/presentation/pages/analytics_page.dart';
 import '../../../auth/presentation/pages/login_page.dart';
-import '../../../auth/providers/auth_provider.dart';
+import '../../../auth/providers/auth_provider.dart' as auth;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -183,10 +186,86 @@ class HomeContent extends StatefulWidget {
 }
 
 class _HomeContentState extends State<HomeContent> {
+  final DailyTrackingService _trackingService = DailyTrackingService();
+  
   int _waterCount = 0; // glasses of water
   int _stepCount = 0; // number of steps
   final int _waterGoal = 8; // 8 glasses per day
   final int _stepGoal = 10000; // 10,000 steps per day
+  
+  DailyTracking? _todayTracking;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTodayTracking();
+  }
+
+  Future<void> _loadTodayTracking() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      try {
+        final tracking = await _trackingService.getTodayTracking(user.uid);
+        if (tracking != null) {
+          setState(() {
+            _todayTracking = tracking;
+            _waterCount = (tracking.waterIntake / 250).round(); // Convert ml to glasses (250ml per glass)
+            _stepCount = tracking.stepCount;
+            _isLoading = false;
+          });
+        } else {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      } catch (e) {
+        print('Error loading today tracking: $e');
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _updateWaterIntake(int glasses) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      try {
+        final waterInMl = glasses * 250; // Convert glasses to ml
+        await _trackingService.updateWaterIntake(user.uid, waterInMl);
+        setState(() {
+          _waterCount = glasses;
+        });
+      } catch (e) {
+        print('Error updating water intake: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to update water intake')),
+        );
+      }
+    }
+  }
+
+  Future<void> _updateStepCount(int steps) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      try {
+        await _trackingService.updateStepCount(user.uid, steps);
+        setState(() {
+          _stepCount = steps;
+        });
+      } catch (e) {
+        print('Error updating step count: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to update step count')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -239,7 +318,7 @@ class _HomeContentState extends State<HomeContent> {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      Consumer<AuthProvider>(
+                      Consumer<auth.AuthProvider>(
                         builder: (context, authProvider, child) {
                           final user = authProvider.user;
                           return Text(
@@ -256,7 +335,7 @@ class _HomeContentState extends State<HomeContent> {
                     ],
                   ),
                 ),
-                Consumer<AuthProvider>(
+                Consumer<auth.AuthProvider>(
                   builder: (context, authProvider, child) {
                     final user = authProvider.user;
                     
@@ -476,15 +555,17 @@ class _HomeContentState extends State<HomeContent> {
                   currentValue: _waterCount,
                   goalValue: _waterGoal,
                   unit: 'cups',
-                  onIncrement: () {
-                    setState(() {
-                      if (_waterCount < _waterGoal) _waterCount++;
-                    });
+                  onIncrement: () async {
+                    if (_waterCount < _waterGoal) {
+                      final newCount = _waterCount + 1;
+                      await _updateWaterIntake(newCount);
+                    }
                   },
-                  onDecrement: () {
-                    setState(() {
-                      if (_waterCount > 0) _waterCount--;
-                    });
+                  onDecrement: () async {
+                    if (_waterCount > 0) {
+                      final newCount = _waterCount - 1;
+                      await _updateWaterIntake(newCount);
+                    }
                   },
                 ),
               ),
@@ -497,15 +578,15 @@ class _HomeContentState extends State<HomeContent> {
                   currentValue: _stepCount,
                   goalValue: _stepGoal,
                   unit: 'steps',
-                  onIncrement: () {
-                    setState(() {
-                      _stepCount += 100; // Increment by 100 steps
-                    });
+                  onIncrement: () async {
+                    final newCount = _stepCount + 100;
+                    await _updateStepCount(newCount);
                   },
-                  onDecrement: () {
-                    setState(() {
-                      if (_stepCount >= 100) _stepCount -= 100;
-                    });
+                  onDecrement: () async {
+                    if (_stepCount >= 100) {
+                      final newCount = _stepCount - 100;
+                      await _updateStepCount(newCount);
+                    }
                   },
                 ),
               ),
@@ -557,7 +638,7 @@ class _HomeContentState extends State<HomeContent> {
     );
   }
 
-  void _showProfileMenu(BuildContext context, AuthProvider authProvider) {
+  void _showProfileMenu(BuildContext context, auth.AuthProvider authProvider) {
     showModalBottomSheet(
       context: context,
       builder: (context) => Container(
@@ -797,8 +878,8 @@ class _TrackingCard extends StatelessWidget {
   final int currentValue;
   final int goalValue;
   final String unit;
-  final VoidCallback onIncrement;
-  final VoidCallback onDecrement;
+  final Future<void> Function() onIncrement;
+  final Future<void> Function() onDecrement;
 
   const _TrackingCard({
     required this.title,
