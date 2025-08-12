@@ -1,0 +1,182 @@
+/* Apelatech Fitness Dashboard - Custom CSS */
+:root {
+    --jet-black: #0A0A0A;
+    --fire-orange: #FF5722;
+    --sky-blue: #2196F3;
+    --jet-black-light: #1A1A1A;
+    --fire-orange-light: #FF6D3A;
+    --sky-blue-light: #42A5F5;
+}
+
+/* Typography */
+* {
+    font-family: 'Inter', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6, .manrope {
+    font-family: 'Manrope', sans-serif !important;
+}
+
+/* Apelatech Branding */
+.apelatech-gradient {
+    background: linear-gradient(135deg, var(--fire-orange), var(--sky-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.brand-logo {
+    background: linear-gradient(135deg, var(--fire-orange), var(--sky-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    text-decoration: none;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    background: linear-gradient(135deg, var(--jet-black) 0%, var(--jet-black-light) 50%, var(--sky-blue) 100%);
+    min-height: 100vh;
+    border-right: 3px solid var(--fire-orange);
+}
+
+.nav-link {
+    color: white !important;
+    border-radius: 12px;
+    margin: 4px 0;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.nav-link:hover {
+    background: linear-gradient(135deg, var(--fire-orange), var(--sky-blue));
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(255, 87, 34, 0.3);
+}
+
+.nav-link.active {
+    background: linear-gradient(135deg, var(--fire-orange), var(--sky-blue));
+    box-shadow: 0 4px 15px rgba(255, 87, 34, 0.4);
+}
+
+/* Card Styling */
+.card {
+    border: none;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    border-radius: 16px;
+    border-left: 4px solid var(--fire-orange);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+}
+
+/* Button Styling */
+.btn-primary, .btn-info, .btn-success {
+    background: linear-gradient(135deg, var(--fire-orange), var(--sky-blue));
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-family: 'Manrope', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover, .btn-info:hover, .btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 87, 34, 0.4);
+}
+
+/* Color Overrides */
+.text-primary {
+    color: var(--sky-blue) !important;
+}
+
+.text-info {
+    color: var(--sky-blue) !important;
+}
+
+.text-danger {
+    color: var(--fire-orange) !important;
+}
+
+.bg-primary {
+    background: linear-gradient(135deg, var(--sky-blue), var(--sky-blue-light)) !important;
+}
+
+.bg-info {
+    background: linear-gradient(135deg, var(--sky-blue), #29B6F6) !important;
+}
+
+.bg-warning {
+    background: linear-gradient(135deg, var(--fire-orange), var(--fire-orange-light)) !important;
+}
+
+/* Table Styling */
+.table th {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    color: var(--jet-black);
+    border-bottom: 2px solid var(--fire-orange);
+}
+
+/* Badge Styling */
+.badge {
+    border-radius: 8px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Header Styling */
+.page-header {
+    background: linear-gradient(135deg, rgba(255, 87, 34, 0.1), rgba(33, 150, 243, 0.1));
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border-left: 5px solid var(--fire-orange);
+}
+
+/* Stat Cards */
+.stat-card {
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: scale(1.05);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .brand-logo {
+        font-size: 1.2rem;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .nav-link:hover {
+        transform: none;
+    }
+}
